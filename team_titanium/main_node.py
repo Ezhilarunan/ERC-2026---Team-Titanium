@@ -256,7 +256,7 @@ class ERCSolutionNode(Node):
                                     self.target_lateral = self.lateral_offsets[idx]
                                     
                                     self.get_logger().info(f"Target matched to Row {self.final_row}. Approaching left edge.")
-                                    cv2.circle(debug_frame, (int(bx + bw/2.0), int(target_y)), 10, (255, 0, 0), -1)
+                                    cv2.rectangle(debug_frame, (bx, by), (bx + bw, by + bh), (0, 165, 255), 2)
                                 else:
                                     self.get_logger().warn(f"Column {label} found, but book missing! Defaulting to Row 1.")
                                     self.final_row = 1
@@ -266,6 +266,10 @@ class ERCSolutionNode(Node):
                                 col_msg = Int32()
                                 col_msg.data = int(label)
                                 self.column_pub.publish(col_msg)
+
+                                row_msg = Int32()
+                                row_msg.data = int(self.final_row)
+                                self.row_pub.publish(row_msg)
                                 
                                 if not self.saved_shelf_image:
                                     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
